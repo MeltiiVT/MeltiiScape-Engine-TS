@@ -11,7 +11,7 @@ import { fromBase37, toBase37 } from '#/util/JString.js';
 
 export class PlayerLoading {
     public static readonly SAV_MAGIC: number = 0x2004;
-    public static readonly SAV_VERSION: number = 6;
+    public static readonly SAV_VERSION: number = 7;
 
     static verify(sav: Packet) {
         if (sav.g2() !== PlayerLoading.SAV_MAGIC) {
@@ -93,6 +93,13 @@ export class PlayerLoading {
             player.stats[i] = sav.g4();
             player.baseLevels[i] = getLevelByExp(player.stats[i]);
             player.levels[i] = sav.g1();
+        }
+
+        // Load prestige counts if the save version supports it
+        if (version >= 7) {
+            for (let i = 0; i < 21; i++) {
+                player.prestigeCounts[i] = sav.g1();
+            }
         }
 
         const varpCount = sav.g2();
