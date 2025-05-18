@@ -2138,4 +2138,32 @@ export default class Player extends PathingEntity {
         const nextDate: bigint = BigInt(Date.now());
         const daysSinceLogin: number = Number(nextDate - lastDate) / (1000 * 60 * 60 * 24);
         // proxying websockets through cf may show IPv6 and breaks anyways
-        // so we just hardc
+        // so we just hardcode 127.0.0.1 (2130706433)
+        this.write(new LastLoginInfo(2130706433, daysSinceLogin, 201, this.messageCount));
+        this.lastDate = nextDate;
+    }
+
+    logout(): void {
+        // to be overridden
+    }
+
+    terminate(): void {
+        // to be overridden
+    }
+
+    messageGame(msg: string) {
+        this.write(new MessageGame(msg));
+    }
+
+    isValid(_hash64?: bigint): boolean {
+        if (this.loggingOut) {
+            return false;
+        }
+
+        if (this.visibility !== Visibility.DEFAULT) {
+            return false;
+        }
+
+        return super.isValid();
+    }
+}
