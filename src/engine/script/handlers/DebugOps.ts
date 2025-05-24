@@ -2,6 +2,7 @@ import { ScriptOpcode } from '#/engine/script/ScriptOpcode.js';
 import { CommandHandlers } from '#/engine/script/ScriptRunner.js';
 import World from '#/engine/World.js';
 import { WorldStat } from '#/engine/WorldStat.js';
+import { mes_broadcast_handler } from '#/network/game/server/WorldCommands.js'; 
 import Environment from '#/util/Environment.js';
 
 const DebugOps: CommandHandlers = {
@@ -79,7 +80,11 @@ const DebugOps: CommandHandlers = {
             // milliseconds
             state.pushInt(elapsed);
         }
-    }
+    },
+
+    [ScriptOpcode.MES_BROADCAST]: state => {
+        mes_broadcast_handler(state);
+    },
 };
 
 export default DebugOps;
