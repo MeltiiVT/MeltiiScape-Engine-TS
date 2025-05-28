@@ -3,17 +3,18 @@ import path from 'path';
 
 import Jagfile from '#/io/Jagfile.js';
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { printError } from '#/util/Logger.js';
 import { listFiles, loadOrder } from '#/util/NameMap.js';
 import { SynthPack, shouldBuildFileAny } from '#/util/PackFile.js';
 
 export function packClientSound() {
-    if (!shouldBuildFileAny('data/src/synth', 'data/pack/client/sounds')) {
+    if (!shouldBuildFileAny(`${Environment.BUILD_SRC_DIR}/synth`, 'data/pack/client/sounds')) {
         return;
     }
 
-    const order = loadOrder('data/src/pack/synth.order');
-    const files = listFiles('data/src/synth');
+    const order = loadOrder(`${Environment.BUILD_SRC_DIR}/pack/synth.order`);
+    const files = listFiles(`${Environment.BUILD_SRC_DIR}/synth`);
 
     const jag = new Jagfile();
 

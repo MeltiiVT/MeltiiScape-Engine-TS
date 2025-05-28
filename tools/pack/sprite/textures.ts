@@ -2,11 +2,12 @@ import fs from 'fs';
 
 import Jagfile from '#/io/Jagfile.js';
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { shouldBuildFile, shouldBuildFileAny } from '#/util/PackFile.js';
 import { convertImage } from '#/util/PixPack.js';
 
 export async function packClientTexture() {
-    if (!shouldBuildFileAny('data/src/textures', 'data/pack/client/textures') && !shouldBuildFile('tools/pack/sprite/textures.ts', 'data/pack/client/textures')) {
+    if (!shouldBuildFileAny(`${Environment.BUILD_SRC_DIR}/textures`, 'data/pack/client/textures') && !shouldBuildFile('tools/pack/sprite/textures.ts', 'data/pack/client/textures')) {
         return;
     }
 
@@ -69,7 +70,7 @@ export async function packClientTexture() {
     // ----
 
     const pack = fs
-        .readFileSync('data/src/pack/texture.pack', 'ascii')
+        .readFileSync(`${Environment.BUILD_SRC_DIR}/pack/texture.pack`, 'ascii')
         .replace(/\r/g, '')
         .split('\n')
         .filter(x => x.length)
@@ -81,7 +82,7 @@ export async function packClientTexture() {
     const index = Packet.alloc(1);
 
     for (let i = 0; i < pack.length; i++) {
-        const data = await convertImage(index, 'data/src/textures', pack[i].name);
+        const data = await convertImage(index, `${Environment.BUILD_SRC_DIR}/textures`, pack[i].name);
 
         // TODO (jkm) check for presence , rather than using `!`
         files[`${pack[i].id}.dat`] = data!;

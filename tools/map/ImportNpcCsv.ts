@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { basename } from 'path';
 
+import Environment from '#/util/Environment.js';
 import { printError, printFatalError, printInfo } from '#/util/Logger.js';
 import { loadDir } from '#/util/Parse.js';
 
@@ -59,7 +60,7 @@ npcList.forEach((line, index) => {
     });
 });
 
-loadDir('data/src/maps', (lines: string[], file: string) => {
+loadDir(`${Environment.BUILD_SRC_DIR}/maps`, (lines: string[], file: string) => {
     if (!file.endsWith('.jm2')) {
         return;
     }
@@ -101,7 +102,7 @@ loadDir('data/src/maps', (lines: string[], file: string) => {
         }
     }
 
-    fs.writeFileSync('data/src/maps/' + file, lines.join('\n'));
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/maps/` + file, lines.join('\n'));
 });
 
 if (allNpcs.length > 0) {

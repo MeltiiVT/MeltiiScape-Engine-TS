@@ -1730,7 +1730,6 @@ export default class Player extends PathingEntity {
             throw new Error(`Invalid xp parameter for addXp call: Stat was: ${stat}, Exp was: ${xp}`);
         }
 
-
         // if the xp arg is 0, then we do not have to change anything or send an unnecessary stat packet.
         if (xp == 0) {
             return;

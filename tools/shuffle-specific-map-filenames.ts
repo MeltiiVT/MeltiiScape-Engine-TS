@@ -167,7 +167,7 @@ async function shuffleSpecificFiles(directoryPath: string, baseFilenames: string
             // First, check if the file exists before attempting to read its content
             try {
                 await fs.access(filePath); // Checks if file exists and is accessible
-            } catch (e) {
+            } catch (_e) {
                 console.log(`  Skipping "${fileNameWithExt}": File not found at ${filePath}.`);
                 continue;
             }

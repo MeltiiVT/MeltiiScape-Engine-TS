@@ -1,4 +1,5 @@
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { printError } from '#/util/Logger.js';
 import { loadDir, loadOrder } from '#/util/NameMap.js';
 import { InterfacePack, ModelPack, ObjPack, SeqPack, VarpPack } from '#/util/PackFile.js';
@@ -161,7 +162,7 @@ type Component = {
 export function packInterface(server: boolean) {
     const component: Record<number, Component> = {};
 
-    const interfaceOrder = loadOrder('data/src/pack/interface.order');
+    const interfaceOrder = loadOrder(`${Environment.BUILD_SRC_DIR}/pack/interface.order`);
     for (let i = 0; i < interfaceOrder.length; i++) {
         const id = interfaceOrder[i];
 
@@ -172,7 +173,7 @@ export function packInterface(server: boolean) {
         };
     }
 
-    loadDir('data/src/scripts', '.if', (src, file) => {
+    loadDir(`${Environment.BUILD_SRC_DIR}/scripts`, '.if', (src, file) => {
         const ifName = file.replace('.if', '');
         const ifId = InterfacePack.getByName(ifName);
 
@@ -192,7 +193,7 @@ export function packInterface(server: boolean) {
                 comName = line.substring(1, line.length - 1);
                 comId = InterfacePack.getByName(`${ifName}:${comName}`);
                 if (comId === -1 || typeof component[comId] === 'undefined') {
-                    throw new Error(`Missing component ID ${ifName}:${comName} in data/src/pack/interface.order`);
+                    throw new Error(`Missing component ID ${ifName}:${comName} in ${Environment.BUILD_SRC_DIR}/pack/interface.order`);
                 }
 
                 component[comId].root = ifName;

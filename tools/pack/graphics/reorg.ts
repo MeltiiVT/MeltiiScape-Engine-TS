@@ -1,19 +1,20 @@
 import fs from 'fs';
 
+import Environment from '#/util/Environment.js';
 import { printError } from '#/util/Logger.js';
 import { loadPack } from '#/util/NameMap.js';
 
-const models = loadPack('data/src/pack/model.pack');
+const models = loadPack(`${Environment.BUILD_SRC_DIR}/pack/model.pack`);
 
-fs.mkdirSync('data/src/models/idk', { recursive: true });
-fs.mkdirSync('data/src/models/obj', { recursive: true });
-fs.mkdirSync('data/src/models/npc', { recursive: true });
-fs.mkdirSync('data/src/models/spotanim', { recursive: true });
-fs.mkdirSync('data/src/models/loc', { recursive: true });
+fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/models/idk`, { recursive: true });
+fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/models/obj`, { recursive: true });
+fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/models/npc`, { recursive: true });
+fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/models/spotanim`, { recursive: true });
+fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/models/loc`, { recursive: true });
 
 function renameModel(category: string, id: string, name: string) {
-    if (fs.existsSync(`data/src/models/model_${id}.ob2`)) {
-        fs.renameSync(`data/src/models/model_${id}.ob2`, `data/src/models/${category}/${name}.ob2`);
+    if (fs.existsSync(`${Environment.BUILD_SRC_DIR}/models/model_${id}.ob2`)) {
+        fs.renameSync(`${Environment.BUILD_SRC_DIR}/models/model_${id}.ob2`, `${Environment.BUILD_SRC_DIR}/models/${category}/${name}.ob2`);
         models[id as unknown as number] = name;
     }
 
@@ -22,7 +23,7 @@ function renameModel(category: string, id: string, name: string) {
 
 const newModelName: Record<string, string> = {};
 
-const locs = fs.readFileSync('data/src/scripts/all.loc', 'ascii').replace(/\r/g, '').split('\n');
+const locs = fs.readFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.loc`, 'ascii').replace(/\r/g, '').split('\n');
 let lastLoc = null;
 for (let i = 0; i < locs.length; i++) {
     const line = locs[i];
@@ -137,9 +138,9 @@ for (let i = 0; i < locs.length; i++) {
         }
     }
 }
-fs.writeFileSync('data/src/scripts/all.loc', locs.join('\n'));
+fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.loc`, locs.join('\n'));
 
-const idk = fs.readFileSync('data/src/scripts/all.idk', 'ascii').replace(/\r/g, '').split('\n');
+const idk = fs.readFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.idk`, 'ascii').replace(/\r/g, '').split('\n');
 for (let i = 0; i < idk.length; i++) {
     const line = idk[i];
     if (!line.startsWith('model') && !line.startsWith('head')) {
@@ -159,9 +160,9 @@ for (let i = 0; i < idk.length; i++) {
         idk[i] = `${key}=${modelName}`;
     }
 }
-fs.writeFileSync('data/src/scripts/all.idk', idk.join('\n'));
+fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.idk`, idk.join('\n'));
 
-const objs = fs.readFileSync('data/src/scripts/all.obj', 'ascii').replace(/\r/g, '').split('\n');
+const objs = fs.readFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.obj`, 'ascii').replace(/\r/g, '').split('\n');
 for (let i = 0; i < objs.length; i++) {
     const line = objs[i];
     if (!line.startsWith('model') && !line.startsWith('man') && !line.startsWith('woman')) {
@@ -207,9 +208,9 @@ for (let i = 0; i < objs.length; i++) {
         objs[i] = `${key}=${modelName}`;
     }
 }
-fs.writeFileSync('data/src/scripts/all.obj', objs.join('\n'));
+fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.obj`, objs.join('\n'));
 
-const npcs = fs.readFileSync('data/src/scripts/all.npc', 'ascii').replace(/\r/g, '').split('\n');
+const npcs = fs.readFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.npc`, 'ascii').replace(/\r/g, '').split('\n');
 for (let i = 0; i < npcs.length; i++) {
     const line = npcs[i];
     if (!line.startsWith('model') && !line.startsWith('head')) {
@@ -229,9 +230,9 @@ for (let i = 0; i < npcs.length; i++) {
         npcs[i] = `${key}=${modelName}`;
     }
 }
-fs.writeFileSync('data/src/scripts/all.npc', npcs.join('\n'));
+fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.npc`, npcs.join('\n'));
 
-const spotanims = fs.readFileSync('data/src/scripts/all.spotanim', 'ascii').replace(/\r/g, '').split('\n');
+const spotanims = fs.readFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.spotanim`, 'ascii').replace(/\r/g, '').split('\n');
 for (let i = 0; i < spotanims.length; i++) {
     const line = spotanims[i];
     if (!line.startsWith('model')) {
@@ -247,10 +248,10 @@ for (let i = 0; i < spotanims.length; i++) {
         spotanims[i] = `${key}=${modelName}`;
     }
 }
-fs.writeFileSync('data/src/scripts/all.spotanim', spotanims.join('\n'));
+fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/scripts/all.spotanim`, spotanims.join('\n'));
 
 fs.writeFileSync(
-    'data/src/pack/model.pack',
+    `${Environment.BUILD_SRC_DIR}/pack/model.pack`,
     models
         .map((name, id) => `${id}=${name}`)
         .filter(x => x)

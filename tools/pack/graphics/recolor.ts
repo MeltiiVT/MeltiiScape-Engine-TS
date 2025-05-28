@@ -3,12 +3,13 @@ import fs from 'fs';
 import Model from '#/cache/graphics/Model.js';
 import Jagfile from '#/io/Jagfile.js';
 import ColorConversion from '#/util/ColorConversion.js';
+import Environment from '#/util/Environment.js';
 import { loadDirExact, loadPack } from '#/util/NameMap.js';
 
 Model.unpack(Jagfile.load('data/pack/client/models'));
 
-const models = loadPack('data/src/pack/model.pack');
-const textures = loadPack('data/src/pack/texture.pack');
+const models = loadPack(`${Environment.BUILD_SRC_DIR}/pack/model.pack`);
+const textures = loadPack(`${Environment.BUILD_SRC_DIR}/pack/texture.pack`);
 
 function convertRecolor(src: string[], file: string, path: string) {
     let changed = false;
@@ -152,8 +153,8 @@ function convertRecolorRetex(src: string[], file: string, path: string) {
     }
 }
 
-loadDirExact('data/src/scripts', '.obj', convertRecolor);
-loadDirExact('data/src/scripts', '.npc', convertRecolor);
-loadDirExact('data/src/scripts', '.idk', convertRecolor);
-loadDirExact('data/src/scripts', '.spotanim', convertRecolor);
-loadDirExact('data/src/scripts', '.loc', convertRecolorRetex);
+loadDirExact(`${Environment.BUILD_SRC_DIR}/scripts`, '.obj', convertRecolor);
+loadDirExact(`${Environment.BUILD_SRC_DIR}/scripts`, '.npc', convertRecolor);
+loadDirExact(`${Environment.BUILD_SRC_DIR}/scripts`, '.idk', convertRecolor);
+loadDirExact(`${Environment.BUILD_SRC_DIR}/scripts`, '.spotanim', convertRecolor);
+loadDirExact(`${Environment.BUILD_SRC_DIR}/scripts`, '.loc', convertRecolorRetex);

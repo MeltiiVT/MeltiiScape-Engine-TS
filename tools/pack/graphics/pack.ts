@@ -2,12 +2,13 @@ import path from 'path';
 
 import Jagfile from '#/io/Jagfile.js';
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { printError } from '#/util/Logger.js';
 import { loadOrder, listFiles } from '#/util/NameMap.js';
 import { AnimPack, BasePack, ModelPack, shouldBuildFile, shouldBuildFileAny } from '#/util/PackFile.js';
 
 export function packClientModel() {
-    if (!shouldBuildFile('tools/pack/graphics/pack.ts', 'data/pack/client/models') && !shouldBuildFileAny('data/src/models', 'data/pack/client/models')) {
+    if (!shouldBuildFile('tools/pack/graphics/pack.ts', 'data/pack/client/models') && !shouldBuildFileAny(`${Environment.BUILD_SRC_DIR}/models`, 'data/pack/client/models')) {
         return;
     }
 
@@ -25,11 +26,11 @@ export function packClientModel() {
     'ob_axis.dat'
     */
 
-    const modelOrder = loadOrder('data/src/pack/model.order');
-    const animOrder = loadOrder('data/src/pack/anim.order');
-    const baseOrder = loadOrder('data/src/pack/base.order');
+    const modelOrder = loadOrder(`${Environment.BUILD_SRC_DIR}/pack/model.order`);
+    const animOrder = loadOrder(`${Environment.BUILD_SRC_DIR}/pack/anim.order`);
+    const baseOrder = loadOrder(`${Environment.BUILD_SRC_DIR}/pack/base.order`);
 
-    const files = listFiles('data/src/models');
+    const files = listFiles(`${Environment.BUILD_SRC_DIR}/models`);
 
     // ----
 

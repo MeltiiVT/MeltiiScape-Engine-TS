@@ -107,9 +107,9 @@ type LogoutRequest = {
 };
 
 class World {
-    private loginThread = createWorker(Environment.STANDALONE_BUNDLE ? 'LoginThread.js' : './server/login/LoginThread.ts');
-    private friendThread = createWorker(Environment.STANDALONE_BUNDLE ? 'FriendThread.js' : './server/friend/FriendThread.ts');
-    private loggerThread = createWorker(Environment.STANDALONE_BUNDLE ? 'LoggerThread.js' : './server/logger/LoggerThread.ts');
+    private loginThread = createWorker(Environment.STANDALONE_BUNDLE ? 'LoginThread.js' : './src/server/login/LoginThread.ts');
+    private friendThread = createWorker(Environment.STANDALONE_BUNDLE ? 'FriendThread.js' : './src/server/friend/FriendThread.ts');
+    private loggerThread = createWorker(Environment.STANDALONE_BUNDLE ? 'LoggerThread.js' : './src/server/logger/LoggerThread.ts');
     private devThread: Worker | NodeWorker | null = null;
 
     private static readonly PLAYERS: number = Environment.NODE_MAX_PLAYERS;
@@ -1755,7 +1755,7 @@ class World {
     }
 
     private createDevThread() {
-        this.devThread = createWorker('./cache/DevThread.ts');
+        this.devThread = createWorker('./src/cache/DevThread.ts');
 
         if (this.devThread instanceof NodeWorker) {
             this.devThread.on('message', msg => {
@@ -1766,7 +1766,7 @@ class World {
                         if (msg.error) {
                             console.error(msg.error);
 
-                            this.broadcastMes(msg.error.replaceAll('data/src/scripts/', ''));
+                            this.broadcastMes(msg.error.replaceAll(`${Environment.BUILD_SRC_DIR}/scripts/`, ''));
                             this.broadcastMes('Check the console for more information.');
                         }
                     } else if (msg.type === 'dev_progress') {

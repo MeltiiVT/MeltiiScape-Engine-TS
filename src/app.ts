@@ -1,17 +1,15 @@
 import fs from 'fs';
 
-
 import { collectDefaultMetrics, register } from 'prom-client';
 
 import { packClient, packServer } from '#/cache/PackAll.js';
 import World from '#/engine/World.js';
 import TcpServer from '#/server/tcp/TcpServer.js';
-import WSServer from '#/server/ws/WSServer.js';
 import Environment from '#/util/Environment.js';
 import { printError, printInfo } from '#/util/Logger.js';
 import { updateCompiler } from '#/util/RuneScriptCompiler.js';
 import { createWorker } from '#/util/WorkerFactory.js';
-import { startManagementWeb, startWeb, web } from '#/web.js';
+import { startManagementWeb, startWeb } from '#/web.js';
 
 if (Environment.BUILD_STARTUP_UPDATE) {
     await updateCompiler();
@@ -33,9 +31,9 @@ if (!fs.existsSync('data/pack/client/config') || !fs.existsSync('data/pack/serve
 }
 
 if (Environment.EASY_STARTUP) {
-    createWorker('./login.ts');
-    createWorker('./friend.ts');
-    createWorker('./logger.ts');
+    createWorker('./src/login.ts');
+    createWorker('./src/friend.ts');
+    createWorker('./src/logger.ts');
 }
 
 await World.start();
@@ -43,11 +41,8 @@ await World.start();
 const tcpServer = new TcpServer();
 tcpServer.start();
 
-const wsServer = new WSServer();
-wsServer.start(web);
-
-startWeb();
-startManagementWeb();
+await startWeb();
+await startManagementWeb();
 
 register.setDefaultLabels({ nodeId: Environment.NODE_ID });
 collectDefaultMetrics({ register });

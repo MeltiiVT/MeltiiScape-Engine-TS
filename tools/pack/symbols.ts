@@ -13,13 +13,14 @@ import { NpcStatMap } from '#/engine/entity/NpcStat.js';
 import { PlayerStatMap } from '#/engine/entity/PlayerStat.js';
 import { ScriptOpcodeMap } from '#/engine/script/ScriptOpcode.js';
 import ScriptOpcodePointers from '#/engine/script/ScriptOpcodePointers.js';
+import Environment from '#/util/Environment.js';
 import { loadDir, loadPack } from '#/util/NameMap.js';
 
 export function generateServerSymbols() {
     fs.mkdirSync('data/symbols', { recursive: true });
 
     const constants: Record<string, string> = {};
-    loadDir('data/src/scripts', '.constant', src => {
+    loadDir(`${Environment.BUILD_SRC_DIR}/scripts`, '.constant', src => {
         for (let i = 0; i < src.length; i++) {
             if (!src[i] || src[i].startsWith('//')) {
                 continue;
@@ -47,14 +48,14 @@ export function generateServerSymbols() {
     fs.writeFileSync('data/symbols/constant.sym', constantSymbols);
 
     let npcSymbols = '';
-    const npcs = loadPack('data/src/pack/npc.pack');
+    const npcs = loadPack(`${Environment.BUILD_SRC_DIR}/pack/npc.pack`);
     for (let i = 0; i < npcs.length; i++) {
         npcSymbols += `${i}\t${npcs[i]}\n`;
     }
     fs.writeFileSync('data/symbols/npc.sym', npcSymbols);
 
     let objSymbols = '';
-    const objs = loadPack('data/src/pack/obj.pack');
+    const objs = loadPack(`${Environment.BUILD_SRC_DIR}/pack/obj.pack`);
     for (let i = 0; i < objs.length; i++) {
         objSymbols += `${i}\t${objs[i]}\n`;
     }
@@ -63,7 +64,7 @@ export function generateServerSymbols() {
     InvType.load('data/pack');
     let invSymbols = '';
     let writeInvSymbols = '';
-    const invs = loadPack('data/src/pack/inv.pack');
+    const invs = loadPack(`${Environment.BUILD_SRC_DIR}/pack/inv.pack`);
     for (let i = 0; i < invs.length; i++) {
         if (!invs[i]) {
             continue;
@@ -77,7 +78,7 @@ export function generateServerSymbols() {
     fs.writeFileSync('data/symbols/writeinv.sym', writeInvSymbols);
 
     let seqSymbols = '';
-    const seqs = loadPack('data/src/pack/seq.pack');
+    const seqs = loadPack(`${Environment.BUILD_SRC_DIR}/pack/seq.pack`);
     for (let i = 0; i < seqs.length; i++) {
         if (!seqs[i]) {
             continue;
@@ -88,7 +89,7 @@ export function generateServerSymbols() {
     fs.writeFileSync('data/symbols/seq.sym', seqSymbols);
 
     let idkSymbols = '';
-    const idks = loadPack('data/src/pack/idk.pack');
+    const idks = loadPack(`${Environment.BUILD_SRC_DIR}/pack/idk.pack`);
     for (let i = 0; i < idks.length; i++) {
         if (!idks[i]) {
             continue;
@@ -99,7 +100,7 @@ export function generateServerSymbols() {
     fs.writeFileSync('data/symbols/idk.sym', idkSymbols);
 
     let spotanimSymbols = '';
-    const spotanims = loadPack('data/src/pack/spotanim.pack');
+    const spotanims = loadPack(`${Environment.BUILD_SRC_DIR}/pack/spotanim.pack`);
     for (let i = 0; i < spotanims.length; i++) {
         if (!spotanims[i]) {
             continue;
@@ -110,7 +111,7 @@ export function generateServerSymbols() {
     fs.writeFileSync('data/symbols/spotanim.sym', spotanimSymbols);
 
     let locSymbols = '';
-    const locs = loadPack('data/src/pack/loc.pack');
+    const locs = loadPack(`${Environment.BUILD_SRC_DIR}/pack/loc.pack`);
     for (let i = 0; i < locs.length; i++) {
         if (!locs[i]) {
             continue;
@@ -124,7 +125,7 @@ export function generateServerSymbols() {
     let comSymbols = '';
     let interfaceSymbols = '';
     let overlaySymbols = '';
-    const coms = loadPack('data/src/pack/interface.pack');
+    const coms = loadPack(`${Environment.BUILD_SRC_DIR}/pack/interface.pack`);
     for (let i = 0; i < coms.length; i++) {
         if (!coms[i] || coms[i] === 'null:null') {
             continue;
@@ -152,7 +153,7 @@ export function generateServerSymbols() {
 
     VarPlayerType.load('data/pack');
     let varpSymbols = '';
-    const varps = loadPack('data/src/pack/varp.pack');
+    const varps = loadPack(`${Environment.BUILD_SRC_DIR}/pack/varp.pack`);
     for (let i = 0; i < varps.length; i++) {
         if (!varps[i]) {
             continue;
@@ -165,7 +166,7 @@ export function generateServerSymbols() {
 
     VarNpcType.load('data/pack');
     let varnSymbols = '';
-    const varns = loadPack('data/src/pack/varn.pack');
+    const varns = loadPack(`${Environment.BUILD_SRC_DIR}/pack/varn.pack`);
     for (let i = 0; i < varns.length; i++) {
         if (!varns[i]) {
             continue;
@@ -178,7 +179,7 @@ export function generateServerSymbols() {
 
     VarSharedType.load('data/pack');
     let varsSymbols = '';
-    const varss = loadPack('data/src/pack/vars.pack');
+    const varss = loadPack(`${Environment.BUILD_SRC_DIR}/pack/vars.pack`);
     for (let i = 0; i < varss.length; i++) {
         if (!varss[i]) {
             continue;
@@ -192,7 +193,7 @@ export function generateServerSymbols() {
     ParamType.load('data/pack');
 
     let paramSymbols = '';
-    const params = loadPack('data/src/pack/param.pack');
+    const params = loadPack(`${Environment.BUILD_SRC_DIR}/pack/param.pack`);
     for (let i = 0; i < params.length; i++) {
         if (!params[i]) {
             continue;
@@ -204,42 +205,42 @@ export function generateServerSymbols() {
     fs.writeFileSync('data/symbols/param.sym', paramSymbols);
 
     let structSymbols = '';
-    const structs = loadPack('data/src/pack/struct.pack');
+    const structs = loadPack(`${Environment.BUILD_SRC_DIR}/pack/struct.pack`);
     for (let i = 0; i < structs.length; i++) {
         structSymbols += `${i}\t${structs[i]}\n`;
     }
     fs.writeFileSync('data/symbols/struct.sym', structSymbols);
 
     let enumSymbols = '';
-    const enums = loadPack('data/src/pack/enum.pack');
+    const enums = loadPack(`${Environment.BUILD_SRC_DIR}/pack/enum.pack`);
     for (let i = 0; i < enums.length; i++) {
         enumSymbols += `${i}\t${enums[i]}\n`;
     }
     fs.writeFileSync('data/symbols/enum.sym', enumSymbols);
 
     let huntSymbols = '';
-    const hunts = loadPack('data/src/pack/hunt.pack');
+    const hunts = loadPack(`${Environment.BUILD_SRC_DIR}/pack/hunt.pack`);
     for (let i = 0; i < hunts.length; i++) {
         huntSymbols += `${i}\t${hunts[i]}\n`;
     }
     fs.writeFileSync('data/symbols/hunt.sym', huntSymbols);
 
     let mesanimSymbols = '';
-    const mesanims = loadPack('data/src/pack/mesanim.pack');
+    const mesanims = loadPack(`${Environment.BUILD_SRC_DIR}/pack/mesanim.pack`);
     for (let i = 0; i < mesanims.length; i++) {
         mesanimSymbols += `${i}\t${mesanims[i]}\n`;
     }
     fs.writeFileSync('data/symbols/mesanim.sym', mesanimSymbols);
 
     let synthSymbols = '';
-    const synths = loadPack('data/src/pack/synth.pack');
+    const synths = loadPack(`${Environment.BUILD_SRC_DIR}/pack/synth.pack`);
     for (let i = 0; i < synths.length; i++) {
         synthSymbols += `${i}\t${synths[i]}\n`;
     }
     fs.writeFileSync('data/symbols/synth.sym', synthSymbols);
 
     let categorySymbols = '';
-    const categories = loadPack('data/src/pack/category.pack');
+    const categories = loadPack(`${Environment.BUILD_SRC_DIR}/pack/category.pack`);
     for (let i = 0; i < categories.length; i++) {
         if (!categories[i]) {
             continue;
@@ -250,7 +251,7 @@ export function generateServerSymbols() {
     fs.writeFileSync('data/symbols/category.sym', categorySymbols);
 
     let scriptSymbols = '';
-    const scripts = loadPack('data/src/pack/script.pack');
+    const scripts = loadPack(`${Environment.BUILD_SRC_DIR}/pack/script.pack`);
     for (let i = 0; i < scripts.length; i++) {
         if (!scripts[i]) {
             continue;
@@ -327,7 +328,7 @@ export function generateServerSymbols() {
 
     let dbTableSymbols = '';
     let dbColumnSymbols = '';
-    const dbtables = loadPack('data/src/pack/dbtable.pack');
+    const dbtables = loadPack(`${Environment.BUILD_SRC_DIR}/pack/dbtable.pack`);
     for (let i = 0; i < dbtables.length; i++) {
         if (!dbtables[i]) {
             continue;
@@ -347,7 +348,7 @@ export function generateServerSymbols() {
     fs.writeFileSync('data/symbols/dbcolumn.sym', dbColumnSymbols);
 
     let dbRowSymbols = '';
-    const dbrows = loadPack('data/src/pack/dbrow.pack');
+    const dbrows = loadPack(`${Environment.BUILD_SRC_DIR}/pack/dbrow.pack`);
     for (let i = 0; i < dbrows.length; i++) {
         if (!dbrows[i]) {
             continue;

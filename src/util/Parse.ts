@@ -1,5 +1,6 @@
 import fs from 'fs';
 
+import Environment from '#/util/Environment.js';
 import { listDir, listFiles } from '#/util/NameMap.js';
 
 export function readTextNormalize(path: string): string {
@@ -151,7 +152,7 @@ export function loadDirExtFull(path: string, ext: string, callback: LoadDirCallb
 export function readConfigs(ext: string) {
     const configs = new Map<string, string[]>();
 
-    loadDirExtFull('data/src/scripts', ext, (lines: string[], file: string) => {
+    loadDirExtFull(`${Environment.BUILD_SRC_DIR}/scripts`, ext, (lines: string[], file: string) => {
         let current: string = '';
         let config: string[] = [];
 

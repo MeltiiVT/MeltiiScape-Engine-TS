@@ -2,10 +2,11 @@ import fs from 'fs';
 
 import Jagfile from '#/io/Jagfile.js';
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { shouldBuildFileAny } from '#/util/PackFile.js';
 
 export function packClientWordenc() {
-    if (!shouldBuildFileAny('data/src/wordenc', 'data/pack/client/wordenc')) {
+    if (!shouldBuildFileAny(`${Environment.BUILD_SRC_DIR}/wordenc`, 'data/pack/client/wordenc')) {
         return;
     }
 
@@ -16,7 +17,7 @@ export function packClientWordenc() {
     const jag = new Jagfile();
 
     const badenc = fs
-        .readFileSync('data/src/wordenc/badenc.txt', 'ascii')
+        .readFileSync(`${Environment.BUILD_SRC_DIR}/wordenc/badenc.txt`, 'ascii')
         .replace(/\r/g, '')
         .split('\n')
         .filter(x => x.length);
@@ -42,7 +43,7 @@ export function packClientWordenc() {
     jag.write('badenc.txt', badencout);
 
     const fragmentsenc = fs
-        .readFileSync('data/src/wordenc/fragmentsenc.txt', 'ascii')
+        .readFileSync(`${Environment.BUILD_SRC_DIR}/wordenc/fragmentsenc.txt`, 'ascii')
         .replace(/\r/g, '')
         .split('\n')
         .filter(x => x.length);
@@ -58,7 +59,7 @@ export function packClientWordenc() {
     jag.write('fragmentsenc.txt', fragmentsencout);
 
     const tldlist = fs
-        .readFileSync('data/src/wordenc/tldlist.txt', 'ascii')
+        .readFileSync(`${Environment.BUILD_SRC_DIR}/wordenc/tldlist.txt`, 'ascii')
         .replace(/\r/g, '')
         .split('\n')
         .filter(x => x.length);
@@ -79,7 +80,7 @@ export function packClientWordenc() {
     jag.write('tldlist.txt', tldlistout);
 
     const domainenc = fs
-        .readFileSync('data/src/wordenc/domainenc.txt', 'ascii')
+        .readFileSync(`${Environment.BUILD_SRC_DIR}/wordenc/domainenc.txt`, 'ascii')
         .replace(/\r/g, '')
         .split('\n')
         .filter(x => x.length);

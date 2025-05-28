@@ -3,6 +3,7 @@ import path from 'path';
 import { parentPort } from 'worker_threads';
 
 import { packClient, packServer } from '#/cache/PackAll.js';
+import Environment from '#/util/Environment.js';
 
 // todo: this file queue is so the rebuild/reload process can utilize the additional context
 let processNextQueue: Set<string> = new Set();
@@ -91,28 +92,28 @@ if (parentPort) {
     });
 }
 
-trackDir('data/src/maps');
-trackDir('data/src/songs');
+trackDir(`${Environment.BUILD_SRC_DIR}/maps`);
+trackDir(`${Environment.BUILD_SRC_DIR}/songs`);
 
 // title.jag
-trackDir('data/src/binary');
-trackDir('data/src/fonts');
-trackDir('data/src/title');
+trackDir(`${Environment.BUILD_SRC_DIR}/binary`);
+trackDir(`${Environment.BUILD_SRC_DIR}/fonts`);
+trackDir(`${Environment.BUILD_SRC_DIR}/title`);
 
 // config.jag, interface.jag
-trackDir('data/src/scripts');
+trackDir(`${Environment.BUILD_SRC_DIR}/scripts`);
 
 // media.jag
-trackDir('data/src/sprites');
+trackDir(`${Environment.BUILD_SRC_DIR}/sprites`);
 
 // models.jag
-trackDir('data/src/models');
+trackDir(`${Environment.BUILD_SRC_DIR}/models`);
 
 // textures.jag
-trackDir('data/src/textures');
+trackDir(`${Environment.BUILD_SRC_DIR}/textures`);
 
 // sounds.jag
-trackDir('data/src/synth');
+trackDir(`${Environment.BUILD_SRC_DIR}/synth`);
 
 // wordenc.jag
-trackDir('data/src/wordenc');
+trackDir(`${Environment.BUILD_SRC_DIR}/wordenc`);

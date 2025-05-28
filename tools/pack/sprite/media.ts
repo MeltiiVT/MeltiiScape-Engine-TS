@@ -1,10 +1,11 @@
 import Jagfile from '#/io/Jagfile.js';
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { shouldBuildFileAny } from '#/util/PackFile.js';
 import { convertImage } from '#/util/PixPack.js';
 
 export async function packClientMedia() {
-    if (!shouldBuildFileAny('data/src/sprites', 'data/pack/client/media')) {
+    if (!shouldBuildFileAny(`${Environment.BUILD_SRC_DIR}/sprites`, 'data/pack/client/media')) {
         return;
     }
 
@@ -128,7 +129,7 @@ export async function packClientMedia() {
     const index = Packet.alloc(2);
     for (let i = 0; i < indexOrder.length; i++) {
         const safeName = indexOrder[i].replace('.dat', '');
-        const data = await convertImage(index, 'data/src/sprites', safeName);
+        const data = await convertImage(index, `${Environment.BUILD_SRC_DIR}/sprites`, safeName);
 
         // TODO (jkm) check for presence , rather than using `!`
         files[`${safeName}.dat`] = data!;

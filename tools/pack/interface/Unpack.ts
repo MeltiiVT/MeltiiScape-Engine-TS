@@ -1,14 +1,15 @@
 import fs from 'fs';
 
 import Jagfile from '#/io/Jagfile.js';
+import Environment from '#/util/Environment.js';
 import { printWarning } from '#/util/Logger.js';
 import { loadPack } from '#/util/NameMap.js';
 
-const pack = loadPack('data/src/pack/interface.pack');
-const objPack = loadPack('data/src/pack/obj.pack');
-const seqPack = loadPack('data/src/pack/seq.pack');
-const varpPack = loadPack('data/src/pack/varp.pack');
-const modelPack = loadPack('data/src/pack/model.pack');
+const pack = loadPack(`${Environment.BUILD_SRC_DIR}/pack/interface.pack`);
+const objPack = loadPack(`${Environment.BUILD_SRC_DIR}/pack/obj.pack`);
+const seqPack = loadPack(`${Environment.BUILD_SRC_DIR}/pack/seq.pack`);
+const varpPack = loadPack(`${Environment.BUILD_SRC_DIR}/pack/varp.pack`);
+const modelPack = loadPack(`${Environment.BUILD_SRC_DIR}/pack/model.pack`);
 
 const jag = Jagfile.load('data/client/interface');
 const dat = jag.read('data');
@@ -279,7 +280,7 @@ for (let i = 0; i < pack.length; i++) {
 
     packStr += `${i}=${pack[i]}\n`;
 }
-fs.writeFileSync('data/src/pack/interface.pack', packStr);
+fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/interface.pack`, packStr);
 
 function statToName(stat: number) {
     switch (stat) {
@@ -743,7 +744,7 @@ function convert(com: Component, x = 0, y = 0, lastCom = -1) {
     return str;
 }
 
-fs.mkdirSync('data/src/scripts/interfaces', { recursive: true });
+fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/scripts/interfaces`, { recursive: true });
 for (let i = 0; i < interfaces.length; i++) {
     const com = interfaces[i];
     if (!com || com.id !== com.rootLayer) {
@@ -752,5 +753,5 @@ for (let i = 0; i < interfaces.length; i++) {
     }
 
     const name = pack[com.id];
-    fs.writeFileSync(`data/src/scripts/interfaces/${name}.if`, convert(com));
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/scripts/interfaces/${name}.if`, convert(com));
 }

@@ -2,9 +2,10 @@ import fs from 'fs';
 
 import Jagfile from '#/io/Jagfile.js';
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 
-if (!fs.existsSync('data/src/sounds')) {
-    fs.mkdirSync('data/src/sounds', { recursive: true });
+if (!fs.existsSync(`${Environment.BUILD_SRC_DIR}/sounds`)) {
+    fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/sounds`, { recursive: true });
 }
 
 // TODO: doesn't -need- to be global from Wave's perspective
@@ -33,7 +34,7 @@ class Wave {
             dat.gdata(data, 0, data.length);
             dat.pos = start;
 
-            fs.writeFileSync(`data/src/synth/sound_${id}.synth`, data);
+            fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/synth/sound_${id}.synth`, data);
         }
 
         for (let i = 0; i < Wave.tracks.length; i++) {
@@ -163,5 +164,5 @@ if (!soundsData) {
 
 Wave.unpack(soundsData);
 
-fs.writeFileSync('data/src/pack/synth.pack', pack);
-fs.writeFileSync('data/src/pack/synth.order', order);
+fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/synth.pack`, pack);
+fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/synth.order`, order);

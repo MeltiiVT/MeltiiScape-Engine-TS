@@ -3,6 +3,7 @@ import fs from 'fs';
 import Model from '#/cache/graphics/Model.js';
 import Jagfile from '#/io/Jagfile.js';
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { printWarning } from '#/util/Logger.js';
 
 const models = Jagfile.load('data/client/models');
@@ -31,8 +32,8 @@ const models = Jagfile.load('data/client/models');
             }
 
             const raw = model.convert();
-            raw.save(`data/src/models/model_${i}.ob2`);
-            // raw.saveGz(`data/src/models/${i}.dat.gz`);
+            raw.save(`${Environment.BUILD_SRC_DIR}/models/model_${i}.ob2`);
+            // raw.saveGz(`${Environment.BUILD_SRC_DIR}/models/${i}.dat.gz`);
             raw.release();
         }
 
@@ -41,15 +42,15 @@ const models = Jagfile.load('data/client/models');
         }
     }
 
-    fs.writeFileSync('data/src/pack/model.pack', pack);
-    fs.writeFileSync('data/src/pack/model.order', order);
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/model.pack`, pack);
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/model.order`, order);
 }
 
 // ----
 
 {
-    if (!fs.existsSync('data/src/models/base')) {
-        fs.mkdirSync('data/src/models/base', { recursive: true });
+    if (!fs.existsSync(`${Environment.BUILD_SRC_DIR}/models/base`)) {
+        fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/models/base`, { recursive: true });
     }
 
     let pack = '';
@@ -113,19 +114,19 @@ const models = Jagfile.load('data/client/models');
         // base.p2(hend - hstart);
         base.p2(tend - tstart);
         base.p2(labelend - labelstart);
-        base.save(`data/src/models/base/base_${id}.base`);
+        base.save(`${Environment.BUILD_SRC_DIR}/models/base/base_${id}.base`);
         base.release();
     }
 
-    fs.writeFileSync('data/src/pack/base.pack', pack);
-    fs.writeFileSync('data/src/pack/base.order', order);
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/base.pack`, pack);
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/base.order`, order);
 }
 
 // ----
 
 {
-    if (!fs.existsSync('data/src/models/frame')) {
-        fs.mkdirSync('data/src/models/frame', { recursive: true });
+    if (!fs.existsSync(`${Environment.BUILD_SRC_DIR}/models/frame`)) {
+        fs.mkdirSync(`${Environment.BUILD_SRC_DIR}/models/frame`, { recursive: true });
     }
 
     let pack = '';
@@ -219,10 +220,10 @@ const models = Jagfile.load('data/client/models');
         frame.p2(t1end - t1start);
         frame.p2(t2end - t2start);
         frame.p2(dend - dstart);
-        frame.save(`data/src/models/frame/anim_${id}.frame`);
+        frame.save(`${Environment.BUILD_SRC_DIR}/models/frame/anim_${id}.frame`);
         frame.release();
     }
 
-    fs.writeFileSync('data/src/pack/anim.pack', pack);
-    fs.writeFileSync('data/src/pack/anim.order', order);
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/anim.pack`, pack);
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/pack/anim.order`, order);
 }

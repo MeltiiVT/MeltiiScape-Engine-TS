@@ -1,5 +1,5 @@
 # Array of source paths
-sources = ["data/src/scripts/"]
+sources = ["../content/scripts/"]
 
 # Array of symbol paths
 symbols = ["data/symbols/"]

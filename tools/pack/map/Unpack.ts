@@ -2,6 +2,7 @@ import fs from 'fs';
 
 import BZip2 from '#/io/BZip2.js';
 import Packet from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { printInfo } from '#/util/Logger.js';
 
 const maps = fs.readdirSync('dump/maps');
@@ -184,7 +185,7 @@ maps.forEach(file => {
             }
         }
     }
-    fs.writeFileSync(`data/src/maps/m${mapX}_${mapZ}.jm2`, '==== MAP ====\n' + section);
+    fs.writeFileSync(`${Environment.BUILD_SRC_DIR}/maps/m${mapX}_${mapZ}.jm2`, '==== MAP ====\n' + section);
 });
 
 maps.forEach(file => {
@@ -226,5 +227,5 @@ maps.forEach(file => {
         }
     }
 
-    fs.appendFileSync(`data/src/maps/m${mapX}_${mapZ}.jm2`, '\n==== LOC ====\n' + section);
+    fs.appendFileSync(`${Environment.BUILD_SRC_DIR}/maps/m${mapX}_${mapZ}.jm2`, '\n==== LOC ====\n' + section);
 });

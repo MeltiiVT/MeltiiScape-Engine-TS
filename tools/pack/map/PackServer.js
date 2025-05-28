@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 import Packet2 from '#/io/Packet.js';
+import Environment from '#/util/Environment.js';
 import { shouldBuild, shouldBuildFile } from '#/util/PackFile.js';
 
 function readMap(map) {
@@ -93,22 +94,22 @@ function readMap(map) {
 }
 
 export function packServerMap() {
-    if (!fs.existsSync('data/src/maps')) {
+    if (!fs.existsSync(`${Environment.BUILD_SRC_DIR}/maps`)) {
         return;
     }
 
     let queue = [];
 
-    fs.readdirSync('data/src/maps')
+    fs.readdirSync(`${Environment.BUILD_SRC_DIR}/maps`)
         .filter(f => f.endsWith('.jm2'))
         .forEach(file => {
             let [x, z] = file.slice(1).split('.').shift().split('_');
             if (
-                !shouldBuildFile(`data/src/maps/${file}`, `data/pack/server/maps/m${x}_${z}`) &&
-                !shouldBuildFile(`data/src/maps/${file}`, `data/pack/server/maps/l${x}_${z}`) &&
-                !shouldBuildFile(`data/src/maps/${file}`, `data/pack/server/maps/n${x}_${z}`) &&
-                !shouldBuildFile(`data/src/maps/${file}`, `data/pack/server/maps/o${x}_${z}`) &&
-                !shouldBuild('data/src/maps', '.csv', `data/pack/server/maps/m${x}_${z}`) &&
+                !shouldBuildFile(`${Environment.BUILD_SRC_DIR}/maps/${file}`, `data/pack/server/maps/m${x}_${z}`) &&
+                !shouldBuildFile(`${Environment.BUILD_SRC_DIR}/maps/${file}`, `data/pack/server/maps/l${x}_${z}`) &&
+                !shouldBuildFile(`${Environment.BUILD_SRC_DIR}/maps/${file}`, `data/pack/server/maps/n${x}_${z}`) &&
+                !shouldBuildFile(`${Environment.BUILD_SRC_DIR}/maps/${file}`, `data/pack/server/maps/o${x}_${z}`) &&
+                !shouldBuild(`${Environment.BUILD_SRC_DIR}/maps`, '.csv', `data/pack/server/maps/m${x}_${z}`) &&
                 !shouldBuild('src/cache/packmap', '.js', `data/pack/server/maps/m${x}_${z}`)
             ) {
                 return;
@@ -125,7 +126,7 @@ export function packServerMap() {
 
     queue.forEach(({ file, x, z }) => {
         let data = fs
-            .readFileSync(`data/src/maps/${file}`, 'ascii')
+            .readFileSync(`${Environment.BUILD_SRC_DIR}/maps/${file}`, 'ascii')
             .replace(/\r/g, '')
             .split('\n')
             .filter(x => x.length);
