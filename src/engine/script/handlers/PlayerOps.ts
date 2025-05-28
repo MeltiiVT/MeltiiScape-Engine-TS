@@ -533,6 +533,21 @@ const PlayerOps: CommandHandlers = {
         state.pushInt(value > chance ? 1 : 0);
     }),
 
+    [ScriptOpcode.STAT_SET_MIN]: checkedHandler(ActivePlayer, state => {
+        const statId: PlayerStat = check(state.popInt(), PlayerStatValid);
+        const player = state.activePlayer;
+
+        let targetLevel = 1;
+        if (statId === PlayerStat.HITPOINTS) {
+            targetLevel = 10;
+        }
+
+        // Assuming player.setLevel also handles resetting XP to the start of that level.
+        // This is consistent with its usage in ClientCheatHandler.ts for `::minme`.
+        player.setLevel(statId, targetLevel);
+        // No value is pushed onto the stack as this operation is a command, not a query.
+    }),
+
     [ScriptOpcode.SPOTANIM_PL]: checkedHandler(ActivePlayer, state => {
         const delay = check(state.popInt(), NumberNotNull);
         const height = state.popInt();

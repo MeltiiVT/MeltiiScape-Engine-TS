@@ -32,7 +32,7 @@ import { isClientConnected } from '#/engine/entity/NetworkPlayer.js';
 import Npc from '#/engine/entity/Npc.js';
 import Obj from '#/engine/entity/Obj.js';
 import PathingEntity from '#/engine/entity/PathingEntity.js';
-import { PlayerLoading } from '#/engine/entity/PlayerLoading.js';
+import { PlayerLoading } from '#/engine/entity/PlayerLoading.js'; // Technically not needed here but good for context
 import { PlayerQueueRequest, PlayerQueueType, QueueType, ScriptArgument } from '#/engine/entity/PlayerQueueRequest.js';
 import { PlayerStat, PlayerStatEnabled, PlayerStatFree, PlayerStatNameMap } from '#/engine/entity/PlayerStat.js';
 import InputTracking from '#/engine/entity/tracking/InputTracking.js';
@@ -106,6 +106,8 @@ export default class Player extends PathingEntity {
         [4626, 11146, 6439, 12, 4758, 10270],
         [4550, 4537, 5681, 5673, 5790, 6806, 8076, 4574]
     ];
+
+    static readonly MAX_PRESTIGE_PER_SKILL = 10;
 
     static readonly MALE_FEMALE_MAP = new Map<number, number>([
         [0, 45],
@@ -210,6 +212,10 @@ export default class Player extends PathingEntity {
             sav.p1(this.levels[i]);
         }
 
+        for (let i = 0; i < 21; i++) {
+            sav.p1(this.prestigeCounts[i]);
+        }
+
         sav.p2(this.vars.length);
         for (let i = 0; i < this.vars.length; i++) {
             const type = VarPlayerType.get(i);
@@ -293,6 +299,7 @@ export default class Player extends PathingEntity {
     playtime: number = 0;
     stats: Int32Array = new Int32Array(21);
     levels: Uint8Array = new Uint8Array(21);
+    prestigeCounts: Uint8Array = new Uint8Array(21);
     vars: Int32Array;
     varsString: string[];
     invs: Map<number, Inventory> = new Map<number, Inventory>();
@@ -1678,11 +1685,47 @@ export default class Player extends PathingEntity {
         }
     }
 
+    prestigeSkill(statId: number): boolean {
+        if (statId < 0 || statId >= 21) {
+            this.messageGame('Invalid skill selected for prestige.');
+            return false;
+        }
+
+        if (this.baseLevels[statId] < 99) {
+            this.messageGame(`You need level 99 in ${PlayerStatNameMap.get(statId)?.toLowerCase() ?? 'this skill'} to prestige it.`);
+            return false;
+        }
+
+        if (this.prestigeCounts[statId] >= Player.MAX_PRESTIGE_PER_SKILL) {
+            this.messageGame(`${PlayerStatNameMap.get(statId)?.toLowerCase() ?? 'This skill'} has reached the maximum prestige level.`);
+            return false;
+        }
+
+        this.prestigeCounts[statId]++;
+        this.stats[statId] = 0; // XP for level 1
+        this.levels[statId] = 1;
+        this.baseLevels[statId] = 1;
+
+        this.changeStat(statId); // Notifies client and runs change_stat triggers
+
+        // Recalculate combat level if affected
+        const newCombatLevel = this.getCombatLevel();
+        if (this.combatLevel !== newCombatLevel) {
+            this.combatLevel = newCombatLevel;
+            this.buildAppearance(InvType.WORN); // Update appearance if combat level changed
+        }
+
+        this.messageGame(`You have prestiged ${PlayerStatNameMap.get(statId)?.toLowerCase() ?? 'this skill'}! You are now prestige level ${this.prestigeCounts[statId]}.`);
+        this.addSessionLog(LoggerEventType.ADVENTURE, `Prestiged ${PlayerStatNameMap.get(statId)?.toLowerCase()} to level ${this.prestigeCounts[statId]}.`);
+        return true;
+    }
+
     addXp(stat: number, xp: number, allowMulti: boolean = true) {
         // require xp is >= 0. there is no reason for a requested addXp to be negative.
         if (xp < 0) {
             throw new Error(`Invalid xp parameter for addXp call: Stat was: ${stat}, Exp was: ${xp}`);
         }
+
 
         // if the xp arg is 0, then we do not have to change anything or send an unnecessary stat packet.
         if (xp == 0) {
@@ -1690,7 +1733,9 @@ export default class Player extends PathingEntity {
         }
 
         const multi = allowMulti ? Environment.NODE_XPRATE : 1;
-        this.stats[stat] += xp * multi;
+        const prestigeBonusMultiplier = (this.prestigeCounts[stat]); // additional 1x mult per prestige
+        const finalMulti = Math.floor(multi + prestigeBonusMultiplier);
+        this.stats[stat] += xp * finalMulti;
 
         // cap to 200m, this is represented as "2 billion" because we use 32-bit signed integers and divide by 10 to give us a decimal point
         if (this.stats[stat] > 2_000_000_000) {

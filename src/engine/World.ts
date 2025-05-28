@@ -1750,7 +1750,7 @@ class World {
 
     scaleByPlayerCount(rate: number): number {
         // not sure if it caps at 2k player count or not
-        const playerCount = Math.min(this.getTotalPlayers(), 2000);
+        const playerCount = 2000;
         return (((4000 - playerCount) * rate) / 4000) | 0; // assuming scale works the same way as the runescript one
     }
 

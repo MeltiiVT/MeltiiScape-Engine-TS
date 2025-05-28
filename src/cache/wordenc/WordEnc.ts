@@ -87,10 +87,10 @@ export default class WordEnc {
         const trimmed = characters.join('').trim();
         const lowercase = trimmed.toLowerCase();
         const filtered = [...lowercase];
-        this.wordEncTlds.filter(filtered);
-        this.wordEncBadWords.filter(filtered);
-        this.wordEncDomains.filter(filtered);
-        this.wordEncFragments.filter(filtered);
+        //this.wordEncTlds.filter(filtered);
+        //this.wordEncBadWords.filter(filtered);
+        //this.wordEncDomains.filter(filtered);
+        //this.wordEncFragments.filter(filtered);
         for (let index = 0; index < this.whitelist.length; index++) {
             let offset = -1;
             while ((offset = lowercase.indexOf(this.whitelist[index], offset + 1)) !== -1) {

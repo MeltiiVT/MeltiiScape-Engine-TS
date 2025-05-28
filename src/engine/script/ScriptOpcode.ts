@@ -184,6 +184,7 @@ export const enum ScriptOpcode {
     STAT_BOOST, // official
     STAT_DRAIN,
     STAT_RANDOM,
+    STAT_SET_MIN, // custom: sets a specific stat to its minimum level (1, or 10 for HP)
     STRONGQUEUE,
     UID, // official
     WEAKQUEUE, // official
@@ -449,7 +450,8 @@ export const enum ScriptOpcode {
     MAP_LASTBANDWIDTHOUT,
     TIMESPENT, // custom: used to profile script execution (record start time)
     GETTIMESPENT, // custom: used to profile script execution (current duration)
-    CONSOLE
+    CONSOLE,
+    MES_BROADCAST // custom: broadcasts a message to all players
 }
 
 export const ScriptOpcodeMap: Map<string, number> = new Map([
@@ -628,6 +630,7 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['STAT_BOOST', ScriptOpcode.STAT_BOOST],
     ['STAT_DRAIN', ScriptOpcode.STAT_DRAIN],
     ['STAT_RANDOM', ScriptOpcode.STAT_RANDOM],
+    ['STAT_SET_MIN', ScriptOpcode.STAT_SET_MIN],
     ['STRONGQUEUE', ScriptOpcode.STRONGQUEUE],
     ['UID', ScriptOpcode.UID],
     ['WEAKQUEUE', ScriptOpcode.WEAKQUEUE],
@@ -857,6 +860,7 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['TIMESPENT', ScriptOpcode.TIMESPENT],
     ['GETTIMESPENT', ScriptOpcode.GETTIMESPENT],
     ['CONSOLE', ScriptOpcode.CONSOLE],
+    ['MES_BROADCAST', ScriptOpcode.MES_BROADCAST],
 ]);
 
 export const ScriptOpcodeNameMap: Map<number, string> = new Map(

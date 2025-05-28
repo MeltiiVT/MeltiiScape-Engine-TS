@@ -43,10 +43,39 @@ export default class ClientCheatHandler extends MessageHandler<ClientCheat> {
             return false;
         }
 
+        if (cmd === 'yell') {
+            let yellMessageContent = '';
+            const commandPrefixLength = cmd.length; // Length of "yell"
+
+            if (cheat.length > commandPrefixLength && cheat.charAt(commandPrefixLength) === ' ') {
+                yellMessageContent = cheat.substring(commandPrefixLength + 1).trim();
+            } else if (cheat.length > commandPrefixLength && cheat.charAt(commandPrefixLength) !== ' ') {
+                player.messageGame('Invalid format. Usage: ::yell <your message>');
+                return true; // Command was handled (by showing an error)
+            }
+
+
+            if (yellMessageContent.length === 0) {
+                player.messageGame('Please enter a message to yell. Usage: ::yell <your message>');
+                return true; // Command was handled (by showing an error)
+            }
+
+            if (yellMessageContent.length > 100) { // Example: Max 100 chars for a yell
+                player.messageGame('Your yell message is too long. Maximum 100 characters.');
+                return true;
+            }
+
+            const messageToSend = yellMessageContent; // Use this if not filtering here
+
+            const broadcastMessage = `[GLOBAL] ${player.displayName}: ${messageToSend}`;
+
+            World.broadcastMes(broadcastMessage);
+            return true; // Command was successfully handled
+        }
+
         if (player.staffModLevel >= 2) {
             player.addSessionLog(LoggerEventType.MODERATOR, 'Ran cheat', cheat);
         }
-
         if (!Environment.NODE_PRODUCTION && player.staffModLevel >= 4) {
             // developer commands
 
@@ -595,5 +624,4 @@ export default class ClientCheatHandler extends MessageHandler<ClientCheat> {
         }
 
         return true;
-    }
-}
+    }}
